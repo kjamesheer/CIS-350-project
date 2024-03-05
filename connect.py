@@ -15,7 +15,7 @@ def createDB():
     if not connection.open():
         QMessageBox.warning(
             None,
-            "RP Contact",
+            "Drink Recipes",
             f"Database Error: {connection.lastError().text()}",
         )
         return False
