@@ -61,7 +61,7 @@ class MainWindow(QMainWindow):
         query = "SELECT DISTINCT liquor FROM download_2;"
         cursor.execute(query)
         liquor_items = cursor.fetchall()
-        # Populate the liquor combo box with options and set icons
+        # Populate the liquor combobox with options and set icons
         for liquor in liquor_items:
             self.liquor_combo_box.addItem(str(liquor[0]))
         connect.close()
