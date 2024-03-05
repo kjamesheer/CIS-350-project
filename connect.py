@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-# drink_recipes/database.py
-
 """This module provides a database connection."""
 
 from PyQt5.QtWidgets import QMessageBox
