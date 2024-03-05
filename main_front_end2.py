@@ -55,8 +55,8 @@ class MainWindow(QMainWindow):
         self.back_button.clicked.connect(self.handle_back_button_click)
 
     def liquor_combobox(self):
-        conn = sqlite3.connect('drinks2.sqlite')
-        cursor = conn.cursor()
+        connect = sqlite3.connect('drinks2.sqlite')
+        cursor = connect.cursor()
         # Run the SQL query to get all unique liquor values
         query = "SELECT DISTINCT liquor FROM download_2;"
         cursor.execute(query)
@@ -64,37 +64,37 @@ class MainWindow(QMainWindow):
         # Populate the liquor combo box with options and set icons
         for liquor in liquor_items:
             self.liquor_combo_box.addItem(str(liquor[0]))
-        conn.close()
+        connect.close()
 
     def mixer_combobox(self):
-        conn = sqlite3.connect('drinks2.sqlite')
-        cursor = conn.cursor()
+        connect = sqlite3.connect('drinks2.sqlite')
+        cursor = connect.cursor()
         query = "SELECT DISTINCT mixer FROM download_2;"
         cursor.execute(query)
         mixer_items = cursor.fetchall()
         for mixer in mixer_items:
             self.mixer_combo_box.addItem(str(mixer[0]))
-        conn.close()
+        connect.close()
 
     def garnish_combobox(self):
-        conn = sqlite3.connect('drinks2.sqlite')
-        cursor = conn.cursor()
+        connect = sqlite3.connect('drinks2.sqlite')
+        cursor = connect.cursor()
         query = "SELECT DISTINCT garnish FROM download_2;"
         cursor.execute(query)
         garnish_items = cursor.fetchall()
         for garnish in garnish_items:
             self.garnish_combo_box.addItem(str(garnish[0]))
-        conn.close()
+        connect.close()
 
     def glass_combobox(self):
-        conn = sqlite3.connect('drinks2.sqlite')
-        cursor = conn.cursor()
+        connect = sqlite3.connect('drinks2.sqlite')
+        cursor = connect.cursor()
         query = "SELECT DISTINCT glass FROM download_2;"
         cursor.execute(query)
         glass_items = cursor.fetchall()
         for glass in glass_items:
             self.glass_combo_box.addItem(str(glass[0]))
-        conn.close()
+        connect.close()
 
     def handle_type_selection(self, index):
         selected_type = self.type_combo_box.currentText()
