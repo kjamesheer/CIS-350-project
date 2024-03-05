@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.glass_combo_box)
         self.glass_combo_box.hide()
 
-        #Populate comboboxes
+        # Populate comboboxes
         self.liquor_combobox()
         self.mixer_combobox()
         self.garnish_combobox()
