@@ -1,137 +1,66 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QComboBox, QPushButton
+import streamlit as st
 import sqlite3
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
+def main():
+    connect = sqlite3.connect('Liquor_Database.db')
+    cursor = connect.cursor()
+    cursor.execute('select * from DrinkRecipe')
+    result = cursor.fetchall()
+    st.write(result)
 
-        self.setWindowTitle("Liquor Recipe Ingredient Search System")
-        self.setGeometry(700, 700, 850, 850) # (x, y, width, height)
+    st.markdown("<h2 style='text-align: center; color: white;'>Liquor Recipe Ingredient Search System</h2>", unsafe_allow_html=True)
 
-        self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
+    # Create a two-column layout
+    col1, col2 = st.columns(2)
 
-        layout = QVBoxLayout()
-        self.central_widget.setLayout(layout)
+    # Create the first selectbox for selecting ingredient types(major)
+    with col1:
+        type_selection = st.selectbox("Select Type", ["Select Type", "Liquor", "Mixer", "Garnish", "Glass"])
 
-        # Create the first QComboBox for selecting ingredient types
-        self.type_combo_box = QComboBox()
-        self.type_combo_box.addItems(["Select Type", "Liquor", "Mixer", "Garnish", "Glass"])
-        layout.addWidget(self.type_combo_box)
+    # Create the second box for selecting specific types(minor) based on the first selection
+    with col2:
+        if type_selection == "Liquor":
 
-        # Connect a slot to handle type selection changes
-        self.type_combo_box.currentIndexChanged.connect(self.handle_type_selection)
+            # Run the SQL query to get all unique spirit values
+            query = "SELECT DISTINCT sprt_name FROM Spirit;"
+            cursor.execute(query)
+            liquor_items = cursor.fetchall()
 
-        # Create the second QComboBox for selecting specific liquor types
-        self.liquor_combo_box = QComboBox()
-        layout.addWidget(self.liquor_combo_box)
-        self.liquor_combo_box.hide()
+            # Create a Streamlit selectbox and populate it with options
+            selected_spirit = st.selectbox("Select Liquor:", [str(liquor[0]) for liquor in liquor_items], index=None)
+            if not None:
+                st.write(f"Selected Liquor: {selected_spirit}")
 
-        self.mixer_combo_box = QComboBox()
-        layout.addWidget(self.mixer_combo_box)
-        self.mixer_combo_box.hide()
+        elif type_selection == "Mixer":
+            query = "SELECT DISTINCT mix_name FROM Mixer;"
+            cursor.execute(query)
+            mixer_items = cursor.fetchall()
 
-        self.garnish_combo_box = QComboBox()
-        layout.addWidget(self.garnish_combo_box)
-        self.garnish_combo_box.hide()
+            selected_mixer = st.selectbox("Select Mixer:", [str(mixer[0]) for mixer in mixer_items], index=None)
+            if not None:
+                st.write(f"Selected Mixer: {selected_mixer}")
 
-        self.glass_combo_box = QComboBox()
-        layout.addWidget(self.glass_combo_box)
-        self.glass_combo_box.hide()
+        elif type_selection == "Garnish":
+            query = "SELECT DISTINCT Garnish_name FROM Garnish;"
+            cursor.execute(query)
+            garnish_items = cursor.fetchall()
 
-        # Populate comboboxes
-        self.liquor_combobox()
-        self.mixer_combobox()
-        self.garnish_combobox()
-        self.glass_combobox()
+            selected_garnish = st.selectbox("Select Garnish:", [str(garnish[0]) for garnish in garnish_items], index=None)
+            if not None:
+                st.write(f"Selected Garnish: {selected_garnish}")
 
-        # Create the back button
-        self.back_button = QPushButton("Back")
-        layout.addWidget(self.back_button)
-        self.back_button.hide()  # Initially hide the back button
+        elif type_selection == "Glass":
+            query = "SELECT DISTINCT glass_name FROM GlassType;"
+            cursor.execute(query)
+            glass_items = cursor.fetchall()
 
-        # Connect a slot to handle back button clicks
-        self.back_button.clicked.connect(self.handle_back_button_click)
-
-    def liquor_combobox(self):
-        connect = sqlite3.connect('drinks2.sqlite')
-        cursor = connect.cursor()
-        # Run the SQL query to get all unique liquor values
-        query = "SELECT DISTINCT liquor FROM download_2;"
-        cursor.execute(query)
-        liquor_items = cursor.fetchall()
-        # Populate the liquor combobox with options and set icons
-        for liquor in liquor_items:
-            self.liquor_combo_box.addItem(str(liquor[0]))
-        connect.close()
-
-    def mixer_combobox(self):
-        connect = sqlite3.connect('drinks2.sqlite')
-        cursor = connect.cursor()
-        query = "SELECT DISTINCT mixer FROM download_2;"
-        cursor.execute(query)
-        mixer_items = cursor.fetchall()
-        for mixer in mixer_items:
-            self.mixer_combo_box.addItem(str(mixer[0]))
-        connect.close()
-
-    def garnish_combobox(self):
-        connect = sqlite3.connect('drinks2.sqlite')
-        cursor = connect.cursor()
-        query = "SELECT DISTINCT garnish FROM download_2;"
-        cursor.execute(query)
-        garnish_items = cursor.fetchall()
-        for garnish in garnish_items:
-            self.garnish_combo_box.addItem(str(garnish[0]))
-        connect.close()
-
-    def glass_combobox(self):
-        connect = sqlite3.connect('drinks2.sqlite')
-        cursor = connect.cursor()
-        query = "SELECT DISTINCT glass FROM download_2;"
-        cursor.execute(query)
-        glass_items = cursor.fetchall()
-        for glass in glass_items:
-            self.glass_combo_box.addItem(str(glass[0]))
-        connect.close()
-
-    def handle_type_selection(self, index):
-        selected_type = self.type_combo_box.currentText()
-        if selected_type == "Liquor":
-            self.type_combo_box.hide()
-            self.liquor_combo_box.show()
-            self.back_button.show()
-        elif selected_type == "Mixer":
-            self.type_combo_box.hide()
-            self.mixer_combo_box.show()
-            self.back_button.show()
-        elif selected_type == "Garnish":
-            self.type_combo_box.hide()
-            self.garnish_combo_box.show()
-            self.back_button.show()
-        elif selected_type == "Glass":
-            self.type_combo_box.hide()
-            self.glass_combo_box.show()
-            self.back_button.show()
+            selected_glass = st.selectbox("Select Glass:", [str(glass[0]) for glass in glass_items], index=None)
+            if not None:
+                st.write(f"Selected Glass: {selected_glass}")
         else:
-            self.liquor_combo_box.hide()
-            self.mixer_combo_box.hide()
-            self.garnish_combo_box.hide()
-            self.glass_combo_box.hide()
-            self.back_button.hide()
-            self.type_combo_box.show()
+            pass
 
-    def handle_back_button_click(self):
-        self.liquor_combo_box.hide()
-        self.mixer_combo_box.hide()
-        self.garnish_combo_box.hide()
-        self.glass_combo_box.hide()
-        self.back_button.hide()
-        self.type_combo_box.show()
+    connect.close()
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+    main()
