@@ -34,27 +34,32 @@ def main():
             # Create a Streamlit selectbox and populate it with options
             selected_spirit = st.selectbox("Select Liquor:", [str(liquor[0]) for liquor in liquor_items], index=None)
 
-            st.write(selected_spirit)
+            query3 = "SELECT DISTINCT sprt_id FROM Spirit;"
+            cursor.execute(query3)
+            liquor_ids = cursor.fetchall()
 
-            query3 = f"""
-        SELECT 
-        DrinkRecipe.drnk_id AS drnk_id_recipe, 
-        DrinkRecipe.picture AS picture_recipe, 
-        DrinkRecipe.drnk_name AS drnk_name_recipe, 
-        DrinkRecipe.sprt_id AS sprt_id_recipe, 
-        DrinkRecipe.Garnish_id AS Garnish_id_recipe, 
-        DrinkRecipe.mix_id AS mix_id_recipe, 
-        DrinkRecipe.glass_id AS glass_id_recipe, 
-        DrinkRecipe.AlcContent AS AlcContent_recipe, 
-        DrinkRecipe.description AS description_recipe, 
-        Spirit.sprt_id AS sprt_id_spirit, 
-        Spirit.sprt_name AS sprt_name, 
-        Spirit.spr_alc_content AS spr_alc_content
-        FROM DrinkRecipe 
-        JOIN Spirit ON Spirit.sprt_id = DrinkRecipe.sprt_id 
-        WHERE DrinkRecipe.sprt_id = '{selected_spirit}';
-"""
-            df = pd.read_sql_query(query3, connect)
+            selected_spirit_id = st.selectbox("Selected ID:", [str(liquor[0]) for liquor in liquor_ids], index=None)
+
+
+            query4 = f"""
+                    SELECT 
+                    DrinkRecipe.drnk_id AS drnk_id_recipe, 
+                    DrinkRecipe.picture AS picture_recipe, 
+                    DrinkRecipe.drnk_name AS drnk_name_recipe, 
+                    DrinkRecipe.sprt_id AS sprt_id_recipe, 
+                    DrinkRecipe.Garnish_id AS Garnish_id_recipe, 
+                    DrinkRecipe.mix_id AS mix_id_recipe, 
+                    DrinkRecipe.glass_id AS glass_id_recipe, 
+                    DrinkRecipe.AlcContent AS AlcContent_recipe, 
+                    DrinkRecipe.description AS description_recipe, 
+                    Spirit.sprt_id AS sprt_id_spirit, 
+                    Spirit.sprt_name AS sprt_name, 
+                    Spirit.spr_alc_content AS spr_alc_content
+                    FROM DrinkRecipe 
+                    JOIN Spirit ON Spirit.sprt_id = DrinkRecipe.sprt_id 
+                    WHERE DrinkRecipe.sprt_id = '{selected_spirit_id}';
+            """
+            df = pd.read_sql_query(query4, connect)
             st.dataframe(df)
 
         elif type_selection == "Mixer":
