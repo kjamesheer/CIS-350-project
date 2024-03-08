@@ -15,8 +15,6 @@ def main():
     with col1:
         type_selection = st.selectbox("Select Type", ["Select Type", "Liquor", "Mixer", "Garnish", "Glass"])
 
-    # Create the second box for selecting specific types(minor) based on the first selection
-    with col2:
         if type_selection == "Liquor":
             st.write("Liquor Table Data")
 
@@ -25,6 +23,31 @@ def main():
 
             # Display the dataframe in Streamlit
             st.dataframe(df)
+
+        elif type_selection == "Mixer":
+            st.write("Mixer Table Data")
+            query = "SELECT * FROM Mixer;"
+            df = pd.read_sql_query(query, connect)
+            st.dataframe(df)
+
+        elif type_selection == "Garnish":
+            st.write("Garnish Table Data")
+            query = "SELECT * FROM Garnish;"
+            df = pd.read_sql_query(query, connect)
+            st.dataframe(df)
+
+        elif type_selection == "Glass":
+            st.write("Glass Table Data")
+            query = "SELECT * FROM GlassType;"
+            df = pd.read_sql_query(query, connect)
+            st.dataframe(df)
+
+        else:
+            pass
+
+    # Create the second box for selecting specific types(minor) based on the first selection
+    with col2:
+        if type_selection == "Liquor":
 
             # Run the SQL query to get all unique spirit values
             query2 = "SELECT DISTINCT sprt_name FROM Spirit;"
@@ -54,10 +77,6 @@ def main():
                 st.dataframe(df)
 # Stop
         elif type_selection == "Mixer":  #--------------------------------------------------------#
-            st.write("Mixer Table Data")
-            query = "SELECT * FROM Mixer;"
-            df = pd.read_sql_query(query, connect)
-            st.dataframe(df)
 
             query2 = "SELECT DISTINCT mix_name FROM Mixer;"
             cursor.execute(query2)
@@ -81,10 +100,6 @@ def main():
                 st.dataframe(df)
 
         elif type_selection == "Garnish":
-            st.write("Garnish Table Data")
-            query = "SELECT * FROM Garnish;"
-            df = pd.read_sql_query(query, connect)
-            st.dataframe(df)
 
             query2 = "SELECT DISTINCT Garnish_name FROM Garnish;"
             cursor.execute(query2)
@@ -108,10 +123,6 @@ def main():
                 st.dataframe(df)
 
         elif type_selection == "Glass":
-            st.write("Glass Table Data")
-            query = "SELECT * FROM GlassType;"
-            df = pd.read_sql_query(query, connect)
-            st.dataframe(df)
 
             query2 = "SELECT DISTINCT glass_name FROM GlassType;"
             cursor.execute(query2)
