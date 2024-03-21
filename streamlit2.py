@@ -26,7 +26,7 @@ def home_page():
             cursor.execute(query2)
             liquor_items = cursor.fetchall()
 
-            selected_spirit = st.selectbox("Select Liquor:", [str(liquor[0]) for liquor in liquor_items], index=True)
+            selected_spirit = st.selectbox("Select Liquor:", [str(liquor[0]) for liquor in liquor_items], index=None)
 
         # Initialize selected_spirit_id with a default value
         selected_spirit_id = ""
