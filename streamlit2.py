@@ -22,8 +22,8 @@ def home_page():
     if type_selection == "Liquor":
         with col2:
 
-            query2 = "SELECT DISTINCT sprt_name FROM Spirit;"
-            cursor.execute(query2)
+            query1 = "SELECT DISTINCT sprt_name FROM Spirit;"
+            cursor.execute(query1)
             liquor_items = cursor.fetchall()
 
             selected_spirit = st.selectbox("Select Liquor:", [str(liquor[0]) for liquor in liquor_items], index=None)
@@ -33,18 +33,18 @@ def home_page():
 
         # Check if a liquor is selected before querying the ID
         if selected_spirit:
-            query3 = (f"SELECT DISTINCT sprt_id FROM Spirit"
+            query2 = (f"SELECT DISTINCT sprt_id FROM Spirit"
                     f" WHERE sprt_name = '{selected_spirit}';")
-            cursor.execute(query3)
+            cursor.execute(query2)
             selected_spirit_row = cursor.fetchone()
 
             if selected_spirit_row is not None:
                 selected_spirit_id = selected_spirit_row[0]
 
         # Query based on the selected spirit ID
-        query4 = (f"SELECT * FROM DrinkRecipe WHERE sprt_id"
+        query3 = (f"SELECT * FROM DrinkRecipe WHERE sprt_id"
                     f" = '{selected_spirit_id}';")
-        df = pd.read_sql_query(query4, connect)
+        df = pd.read_sql_query(query3, connect)
 
         if selected_spirit_id and df.empty:
             st.write("No recipe with this ingredient."
@@ -56,8 +56,8 @@ def home_page():
     elif type_selection == "Mixer":
         with col2:
 
-            query2 = "SELECT DISTINCT mix_name FROM Mixer;"
-            cursor.execute(query2)
+            query1 = "SELECT DISTINCT mix_name FROM Mixer;"
+            cursor.execute(query1)
             mixer_items = cursor.fetchall()
 
             selected_mixer = st.selectbox("Select Mixer:", [str(mixer[0]) for mixer in mixer_items], index=None)
@@ -65,17 +65,17 @@ def home_page():
         selected_mixer_id = ""
 
         if selected_mixer:
-            query3 = (f"SELECT DISTINCT mix_id FROM Mixer"
+            query2 = (f"SELECT DISTINCT mix_id FROM Mixer"
                       f" WHERE mix_name = '{selected_mixer}';")
-            cursor.execute(query3)
+            cursor.execute(query2)
             selected_mixer_row = cursor.fetchone()
 
             if selected_mixer_row is not None:
                 selected_mixer_id = selected_mixer_row[0]
 
-        query4 = (f"SELECT * FROM DrinkRecipe WHERE"
+        query3 = (f"SELECT * FROM DrinkRecipe WHERE"
                   f" mix_id = '{selected_mixer_id}';")
-        df = pd.read_sql_query(query4, connect)
+        df = pd.read_sql_query(query3, connect)
         if selected_mixer_id and df.empty:
             st.write("No recipe with this ingredient."
                      " Please select another ingredient")
@@ -86,8 +86,8 @@ def home_page():
     elif type_selection == "Garnish":
         with col2:
 
-            query2 = "SELECT DISTINCT Garnish_name FROM Garnish;"
-            cursor.execute(query2)
+            query1 = "SELECT DISTINCT Garnish_name FROM Garnish;"
+            cursor.execute(query1)
             garnish_items = cursor.fetchall()
 
             selected_garnish = st.selectbox("Select Garnish:", [str(garnish[0]) for garnish in garnish_items], index=None)
@@ -95,17 +95,17 @@ def home_page():
         selected_garnish_id = ""
 
         if selected_garnish:
-            query3 = (f"SELECT DISTINCT Garnish_id FROM Garnish"
+            query2 = (f"SELECT DISTINCT Garnish_id FROM Garnish"
                       f" WHERE Garnish_name = '{selected_garnish}';")
-            cursor.execute(query3)
+            cursor.execute(query2)
             selected_garnish_row = cursor.fetchone()
 
             if selected_garnish_row is not None:
                 selected_garnish_id = selected_garnish_row[0]
 
-        query4 = (f"SELECT * FROM DrinkRecipe WHERE"
+        query3 = (f"SELECT * FROM DrinkRecipe WHERE"
                   f" Garnish_id = '{selected_garnish_id}';")
-        df = pd.read_sql_query(query4, connect)
+        df = pd.read_sql_query(query3, connect)
         if selected_garnish_id and df.empty:
             st.write("No recipe with this ingredient."
                      " Please select another ingredient")
@@ -116,8 +116,8 @@ def home_page():
     elif type_selection == "Glass":
         with col2:
 
-            query2 = "SELECT DISTINCT glass_name FROM GlassType;"
-            cursor.execute(query2)
+            query1 = "SELECT DISTINCT glass_name FROM GlassType;"
+            cursor.execute(query1)
             glass_items = cursor.fetchall()
 
             selected_glass = st.selectbox("Select Glass:", [str(glass[0]) for glass in glass_items], index=None)
@@ -125,17 +125,17 @@ def home_page():
         selected_glass_id = ""
 
         if selected_glass:
-            query3 = (f"SELECT DISTINCT glass_id FROM GlassType"
+            query2 = (f"SELECT DISTINCT glass_id FROM GlassType"
                       f" WHERE glass_name = '{selected_glass}';")
-            cursor.execute(query3)
+            cursor.execute(query2)
             selected_glass_row = cursor.fetchone()
 
             if selected_glass_row is not None:
                 selected_glass_id = selected_glass_row[0]
 
-        query4 = (f"SELECT * FROM DrinkRecipe WHERE glass_id"
+        query3 = (f"SELECT * FROM DrinkRecipe WHERE glass_id"
                   f" = '{selected_glass_id}';")
-        df = pd.read_sql_query(query4, connect)
+        df = pd.read_sql_query(query3, connect)
         if selected_glass_id and df.empty:
             st.write("No recipe with this ingredient."
                      " Please select another ingredient")
@@ -152,16 +152,65 @@ def all_recipes():
     connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
+    st.sidebar.button("Search")
+
     st.sidebar.title("Filter:")
 
-    query2_ar = "SELECT DISTINCT glass_name FROM GlassType;"
+    query1_ar = "SELECT DISTINCT sprt_name FROM Spirit;"
+    cursor.execute(query1_ar)
+    liquor_items = cursor.fetchall()
+
+
+    on1 = st.sidebar.toggle('Liquor:')
+    if not on1:
+        for liquor in liquor_items:
+            st.sidebar.checkbox(f"{liquor[0]}")
+
+
+    query2_ar = "SELECT DISTINCT mix_name FROM Mixer;"
     cursor.execute(query2_ar)
+    mixer_items = cursor.fetchall()
+
+    on2 = st.sidebar.toggle('Mixers:')
+    if not on2:
+        for mixer in mixer_items:
+            st.sidebar.checkbox(f"{mixer[0]}")
+
+    query3_ar = "SELECT DISTINCT Garnish_name FROM Garnish;"
+    cursor.execute(query3_ar)
+    garnish_items = cursor.fetchall()
+
+    on3 = st.sidebar.toggle('Garnishes:')
+    if not on3:
+        for garnish in garnish_items:
+            st.sidebar.checkbox(f"{garnish[0]}")
+
+    query4_ar = "SELECT DISTINCT glass_name FROM GlassType;"
+    cursor.execute(query4_ar)
     glass_items = cursor.fetchall()
 
-    st.sidebar.write("Glasses:")
-    for glass in glass_items:
-        st.sidebar.checkbox(f"{glass[0]}")
+    on4 = st.sidebar.toggle('Glasses:')
+    if not on4:
+        for glass in glass_items:
+            st.sidebar.checkbox(f"{glass[0]}")
 
+    query5_ar = "SELECT DISTINCT Difficulty FROM DrinkRecipe;"
+    cursor.execute(query5_ar)
+    diff_items = cursor.fetchall()
+
+    on5 = st.sidebar.toggle('Difficulties:')
+    if not on5:
+        for diff in diff_items:
+            st.sidebar.checkbox(f"{diff[0]}")
+
+    query6_ar = "SELECT DISTINCT Color_Of_Drink FROM DrinkRecipe;"
+    cursor.execute(query6_ar)
+    color_items = cursor.fetchall()
+
+    on6 = st.sidebar.toggle('Colors:')
+    if not on6:
+        for color in color_items:
+            st.sidebar.checkbox(f"{color[0]}")
 
     connect.close()
 
