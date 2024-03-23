@@ -51,7 +51,7 @@ def home_page():
                 " Please select another ingredient")
         elif selected_spirit_id:
             st.write("Recipes:")
-            st.dataframe(df)
+            st.data_editor(df)
 
     elif type_selection == "Mixer":
         with col2:
@@ -81,7 +81,7 @@ def home_page():
                      " Please select another ingredient")
         elif selected_mixer_id:
             st.write("Recipes:")
-            st.dataframe(df)
+            st.data_editor(df)
 
     elif type_selection == "Garnish":
         with col2:
@@ -141,7 +141,7 @@ def home_page():
                      " Please select another ingredient")
         elif selected_glass_id:
             st.write("Recipes:")
-            st.dataframe(df)
+            st.data_editor(df)
 
     else:
         pass
