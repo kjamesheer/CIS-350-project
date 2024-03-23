@@ -133,7 +133,7 @@ def home_page():
             if selected_glass_row is not None:
                 selected_glass_id = selected_glass_row[0]
 
-        query3 = (f"SELECT * FROM DrinkRecipe WHERE glass_id"
+        query3 = (f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
                   f" = '{selected_glass_id}';")
         df = pd.read_sql_query(query3, connect)
         if selected_glass_id and df.empty:
@@ -141,7 +141,7 @@ def home_page():
                      " Please select another ingredient")
         elif selected_glass_id:
             st.write("Recipes:")
-            st.data_editor(df)
+            st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("favorite", default=False)}, disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True)
 
     else:
         pass
