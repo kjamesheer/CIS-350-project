@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def home_page():
-    connect = sqlite3.connect('Liquor_Database.db')
+    connect = sqlite3.connect('../../Documents/Downloads/Liquor_Database.db')
     cursor = connect.cursor()
 
     st.image('1096302.jpg')
@@ -42,8 +42,8 @@ def home_page():
                 selected_spirit_id = selected_spirit_row[0]
 
         # Query based on the selected spirit ID
-        query3 = (f"SELECT * FROM DrinkRecipe WHERE sprt_id"
-                    f" = '{selected_spirit_id}';")
+        query3 = (f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
+                    f" sprt_id = '{selected_spirit_id}';")
         df = pd.read_sql_query(query3, connect)
 
         if selected_spirit_id and df.empty:
@@ -51,7 +51,7 @@ def home_page():
                 " Please select another ingredient")
         elif selected_spirit_id:
             st.write("Recipes:")
-            st.data_editor(df)
+            st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("favorite", default=False)} ,disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True)
 
     elif type_selection == "Mixer":
         with col2:
@@ -73,7 +73,7 @@ def home_page():
             if selected_mixer_row is not None:
                 selected_mixer_id = selected_mixer_row[0]
 
-        query3 = (f"SELECT * FROM DrinkRecipe WHERE"
+        query3 = (f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
                   f" mix_id = '{selected_mixer_id}';")
         df = pd.read_sql_query(query3, connect)
         if selected_mixer_id and df.empty:
@@ -81,7 +81,8 @@ def home_page():
                      " Please select another ingredient")
         elif selected_mixer_id:
             st.write("Recipes:")
-            st.data_editor(df)
+            st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("favorite", default=False)},
+                           disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True)
 
     elif type_selection == "Garnish":
         with col2:
@@ -134,7 +135,7 @@ def home_page():
                 selected_glass_id = selected_glass_row[0]
 
         query3 = (f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
-                  f" = '{selected_glass_id}';")
+                  f" glass_id = '{selected_glass_id}';")
         df = pd.read_sql_query(query3, connect)
         if selected_glass_id and df.empty:
             st.write("No recipe with this ingredient."
@@ -149,7 +150,7 @@ def home_page():
     connect.close()
 
 def all_recipes():
-    connect = sqlite3.connect('Liquor_Database.db')
+    connect = sqlite3.connect('../../Documents/Downloads/Liquor_Database.db')
     cursor = connect.cursor()
 
     st.sidebar.button("Search")
