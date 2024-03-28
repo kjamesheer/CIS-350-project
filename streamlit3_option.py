@@ -196,9 +196,8 @@ def all_recipes():
             if st.sidebar.checkbox(f"{glass[0]}", key=f"glass_{glass[0]}"):
                 selected_glasses.append(glass[0])
 
-
     # Build query to fetch recipes based on selected options
-    query = "SELECT drnk_id, picture, drnk_name, sprt_id, Garnish_id, mix_id, AlcContent, description FROM DrinkRecipe WHERE 1=1"
+    query = "SELECT drnk_id, picture, drnk_name, sprt_id, Garnish_id, mix_id, glass_id, AlcContent, description FROM DrinkRecipe WHERE 1=1"
     if selected_liquors:
         query += f" AND sprt_id IN (SELECT sprt_id FROM Spirit WHERE sprt_name IN ({','.join(['?'] * len(selected_liquors))}))"
     if selected_mixers:
@@ -211,21 +210,25 @@ def all_recipes():
     # Fetch and display recipes
     cursor.execute(query, selected_liquors + selected_mixers + selected_garnishes + selected_glasses)
     recipes = cursor.fetchall()
-    st.header("Filtered Recipes:")
+
+    table_data = []
+    table_data.append(["drnk_id", "picture", "drnk_name", "sprt_id", "Garnish_id", "mix_id", "glass_id", "Alc Content", "description"])
     for recipe in recipes:
         if any(recipe):
-            st.write(f"Recipe ID: {recipe[0] if recipe[0] is not None else ''}")
-            st.write(f"Picture: {recipe[1] if recipe[1] is not None else ''}")
-            st.write(f"Name: {recipe[2] if recipe[2] is not None else ''}")
-            st.write(f"Spirit ID: {recipe[3] if recipe[3] is not None else ''}")
-            st.write(f"Garnish ID: {recipe[4] if recipe[4] is not None else ''}")
-            st.write(f"Mixer ID: {recipe[5] if recipe[5] is not None else ''}")
-            st.write(f"Alcohol Content: {recipe[6] if recipe[6] is not None else ''}")
-            st.write(f"Description: {recipe[7] if recipe[7] is not None else ''}")
-            st.write("---")
+            table_data.append([recipe[0] if recipe[0] is not None else '',
+                               recipe[1] if recipe[1] is not None else '',
+                               recipe[2] if recipe[2] is not None else '',
+                               recipe[3] if recipe[3] is not None else '',
+                               recipe[4] if recipe[4] is not None else '',
+                               recipe[5] if recipe[5] is not None else '',
+                               recipe[6] if recipe[6] is not None else '',
+                               recipe[7] if recipe[7] is not None else '',
+                               recipe[8] if recipe[8] is not None else ''])
+
+    st.header("Filtered Recipes:")
+    st.table(table_data)
 
     connect.close()
-
 
 #     selected_liquors = st.sidebar.checkbox("Liquors")
 #     selected_mixers = st.sidebar.checkbox("Mixers")
