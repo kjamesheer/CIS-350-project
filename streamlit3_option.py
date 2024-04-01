@@ -154,8 +154,6 @@ def all_recipes():
 
     st.sidebar.title("Filter:")
 
-    selected_items = []
-
     # Get selected liquor names
     selected_liquors = []
     if st.sidebar.checkbox("Liquors", key="liquors_checkbox"):
@@ -211,64 +209,30 @@ def all_recipes():
     cursor.execute(query, selected_liquors + selected_mixers + selected_garnishes + selected_glasses)
     recipes = cursor.fetchall()
 
-    table_data = []
-    table_data.append(["drnk_id", "picture", "drnk_name", "sprt_id", "Garnish_id", "mix_id", "glass_id", "Alc Content", "description"])
-    for recipe in recipes:
-        if any(recipe):
-            table_data.append([recipe[0] if recipe[0] is not None else '',
-                               recipe[1] if recipe[1] is not None else '',
-                               recipe[2] if recipe[2] is not None else '',
-                               recipe[3] if recipe[3] is not None else '',
-                               recipe[4] if recipe[4] is not None else '',
-                               recipe[5] if recipe[5] is not None else '',
-                               recipe[6] if recipe[6] is not None else '',
-                               recipe[7] if recipe[7] is not None else '',
-                               recipe[8] if recipe[8] is not None else ''])
+    if not recipes:
+        st.write("No recipe with this ingredient. Please select another ingredient")
+    else:
+        table_data = []
+        table_data.append(
+            ["drnk_id", "picture", "drnk_name", "sprt_id", "Garnish_id", "mix_id", "glass_id", "Alc Content",
+             "description"])
+        for recipe in recipes:
+            if any(recipe):
+                table_data.append([recipe[0] if recipe[0] is not None else '',
+                                   recipe[1] if recipe[1] is not None else '',
+                                   recipe[2] if recipe[2] is not None else '',
+                                   recipe[3] if recipe[3] is not None else '',
+                                   recipe[4] if recipe[4] is not None else '',
+                                   recipe[5] if recipe[5] is not None else '',
+                                   recipe[6] if recipe[6] is not None else '',
+                                   recipe[7] if recipe[7] is not None else '',
+                                   recipe[8] if recipe[8] is not None else ''])
 
-    st.header("Filtered Recipes:")
-    st.table(table_data)
+        # Display the table
+        st.header("Filtered Recipes:")
+        st.table(table_data)
 
     connect.close()
-
-#     selected_liquors = st.sidebar.checkbox("Liquors")
-#     selected_mixers = st.sidebar.checkbox("Mixers")
-#     selected_garnishes = st.sidebar.checkbox("Garnishes")
-#     selected_glasses = st.sidebar.checkbox("Glasses")
-#
-#     selected_items = []
-#
-#     if selected_liquors:
-#         query2_ar = "SELECT DISTINCT drnk_id, drnk_name, description FROM DrinkRecipe WHERE sprt_id IN (SELECT sprt_id FROM Spirit);"
-#         cursor.execute(query2_ar)
-#         selected_items.extend(cursor.fetchall())
-#
-#     if selected_mixers:
-#         query2_ar = "SELECT DISTINCT drnk_id, drnk_name, description FROM DrinkRecipe WHERE mix_id IN (SELECT mix_id FROM Mixer);"
-#         cursor.execute(query2_ar)
-#         selected_items.extend(cursor.fetchall())
-#
-#     if selected_garnishes:
-#         query2_ar = "SELECT DISTINCT drnk_id, drnk_name, description FROM DrinkRecipe WHERE Garnish_id IN (SELECT Garnish_id FROM Garnish);"
-#         cursor.execute(query2_ar)
-#         selected_items.extend(cursor.fetchall())
-#
-#     if selected_glasses:
-#         query2_ar = "SELECT DISTINCT drnk_id, drnk_name, description FROM DrinkRecipe WHERE glass_id IN (SELECT glass_id FROM GlassType);"
-#         cursor.execute(query2_ar)
-#         selected_items.extend(cursor.fetchall())
-#
-#     connect.close()
-#
-#     st.header("Selected Recipes:")
-#     for item in selected_items:
-#         st.write(f"Recipe ID: {item[0]}")
-#         st.write(f"Recipe Name: {item[1]}")
-#         st.write(f"Description: {item[2]}")
-#         st.write("---")
-#
-# # Call the function
-# all_recipes()
-
 
 #-----------------------------------------------------------------------#
 st.markdown("<h2 style='text-align: center; color:"
