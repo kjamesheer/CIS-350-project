@@ -4,7 +4,7 @@ import pandas as pd
 
 
 def home_page():
-    connect = sqlite3.connect('../../Documents/Downloads/Liquor_Database.db')
+    connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
     st.image('1096302.jpg')
@@ -150,10 +150,15 @@ def home_page():
     connect.close()
 
 def all_recipes():
-    connect = sqlite3.connect('../../Documents/Downloads/Liquor_Database.db')
+    connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
-    st.sidebar.button("Search")
+    init = 0
+
+    if init == 0:
+        table_query = "SELECT * FROM DrinkRecipe;"
+        df = pd.read_sql_query(table_query, connect)
+        st.dataframe(df, hide_index=True)
 
     st.sidebar.title("Filter:")
 
@@ -161,48 +166,121 @@ def all_recipes():
     cursor.execute(query1_ar)
     liquor_items = cursor.fetchall()
 
+    selected_liquors = []
 
     on1 = st.sidebar.toggle('Liquor:')
     if not on1:
         for liquor in liquor_items:
-            st.sidebar.checkbox(f"{liquor[0]}")
+            selected_liq = st.sidebar.checkbox(f"{liquor[0]}")
+            if selected_liq:
+                selected_liquors.append(liquor[0])
+
+    length = len(selected_liquors)
+
+    if selected_liquors:
+        st.sidebar.write(f"{length} liquors selected")
+#
+        s_values = {}
+
+        for i in range(1, 4):
+            s_values[f'S00{i}'] = i
+            st.write(f"{s_values[f'S00{i}']}")
+#
+#       if len(selected_liquors) == 1:
+#            liq_qur = f"SELECT * FROM DrinkRecipe WHERE sprt_id = '{s_values[0]}'"
+#            df = pd.read_sql_query(liq_qur, connect)
+#            st.dataframe(df, hide_index=True)
 
 
     query2_ar = "SELECT DISTINCT mix_name FROM Mixer;"
     cursor.execute(query2_ar)
     mixer_items = cursor.fetchall()
 
+    selected_mixers = []
+
     on2 = st.sidebar.toggle('Mixers:')
     if not on2:
         for mixer in mixer_items:
-            st.sidebar.checkbox(f"{mixer[0]}")
+            selected_mix = st.sidebar.checkbox(f"{mixer[0]}")
+            if selected_mix:
+                selected_mixers.append(mixer[0])
+
+    length2 = len(selected_mixers)
+
+    if selected_mixers:
+        st.sidebar.write(f"{length2} mixers selected")
 
     query3_ar = "SELECT DISTINCT Garnish_name FROM Garnish;"
     cursor.execute(query3_ar)
     garnish_items = cursor.fetchall()
 
+    selected_garnishes = []
+
     on3 = st.sidebar.toggle('Garnishes:')
     if not on3:
         for garnish in garnish_items:
-            st.sidebar.checkbox(f"{garnish[0]}")
+            selected_gar = st.sidebar.checkbox(f"{garnish[0]}")
+            if selected_gar:
+                selected_garnishes.append(garnish[0])
+
+        length3 = len(selected_garnishes)
+
+        if selected_garnishes:
+            st.sidebar.write(f"{length3} garnishes selected")
 
     query4_ar = "SELECT DISTINCT glass_name FROM GlassType;"
     cursor.execute(query4_ar)
     glass_items = cursor.fetchall()
 
+    selected_glasses = []
+
     on4 = st.sidebar.toggle('Glasses:')
     if not on4:
         for glass in glass_items:
-            st.sidebar.checkbox(f"{glass[0]}")
+            selected_gl = st.sidebar.checkbox(f"{glass[0]}")
+            if selected_gl:
+                selected_glasses.append(glass[0])
+
+        length4 = len(selected_glasses)
+
+        if selected_glasses:
+            st.sidebar.write(f"{length4} glasses selected")
 
     query5_ar = "SELECT DISTINCT Difficulty FROM DrinkRecipe;"
     cursor.execute(query5_ar)
     diff_items = cursor.fetchall()
 
+    selected_difficulties = []
+
     on5 = st.sidebar.toggle('Difficulties:')
     if not on5:
         for diff in diff_items:
-            st.sidebar.checkbox(f"{diff[0]}")
+            selected_dif = st.sidebar.checkbox(f"{diff[0]}")
+            if selected_dif:
+                selected_difficulties.append(diff[0])
+
+        if selected_difficulties:
+            if len(selected_difficulties) == 1:
+                st.sidebar.write(f"{selected_difficulties[0]} selected")
+
+                dif_qur = f"SELECT * FROM DrinkRecipe WHERE Difficulty = '{selected_difficulties[0]}';"
+                df = pd.read_sql_query(dif_qur, connect)
+                st.dataframe(df, hide_index=True)
+
+            if len(selected_difficulties) == 2:
+                st.sidebar.write(f"{selected_difficulties[0]} and {selected_difficulties[1]} selected")
+
+                dif_qur2 = (f"SELECT * FROM DrinkRecipe WHERE Difficulty = '{selected_difficulties[0]}' OR "
+                            f"Difficulty = '{selected_difficulties[1]}';")
+                df = pd.read_sql_query(dif_qur2, connect)
+                st.dataframe(df, hide_index=True)
+            if len(selected_difficulties) == 3:
+                st.sidebar.write("All difficulties selected")
+
+                dif_qur3 = (f"SELECT * FROM DrinkRecipe")
+                df = pd.read_sql_query(dif_qur3, connect)
+                st.dataframe(df, hide_index=True)
+
 
     query6_ar = "SELECT DISTINCT Color_Of_Drink FROM DrinkRecipe;"
     cursor.execute(query6_ar)
