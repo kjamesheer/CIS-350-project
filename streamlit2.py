@@ -153,13 +153,6 @@ def all_recipes():
     connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
-    init = 0
-
-    if init == 0:
-        table_query = "SELECT * FROM DrinkRecipe;"
-        df = pd.read_sql_query(table_query, connect)
-        st.dataframe(df, hide_index=True)
-
     st.sidebar.title("Filter:")
 
     query1_ar = "SELECT DISTINCT sprt_name FROM Spirit;"
@@ -179,17 +172,6 @@ def all_recipes():
 
     if selected_liquors:
         st.sidebar.write(f"{length} liquors selected")
-#
-        s_values = {}
-
-        for i in range(1, 4):
-            s_values[f'S00{i}'] = i
-            st.write(f"{s_values[f'S00{i}']}")
-#
-#       if len(selected_liquors) == 1:
-#            liq_qur = f"SELECT * FROM DrinkRecipe WHERE sprt_id = '{s_values[0]}'"
-#            df = pd.read_sql_query(liq_qur, connect)
-#            st.dataframe(df, hide_index=True)
 
 
     query2_ar = "SELECT DISTINCT mix_name FROM Mixer;"
@@ -286,10 +268,36 @@ def all_recipes():
     cursor.execute(query6_ar)
     color_items = cursor.fetchall()
 
+    selected_colors = []
+
     on6 = st.sidebar.toggle('Colors:')
     if not on6:
         for color in color_items:
-            st.sidebar.checkbox(f"{color[0]}")
+            selected_clr = st.sidebar.checkbox(f"{color[0]}")
+            if selected_clr:
+                selected_colors.append(color[0])
+
+
+        if selected_colors:
+            if len(selected_colors) == 1:
+                st.sidebar.write(f"{selected_colors[0]} selected")
+
+                clr_qur = (f"SELECT * FROM DrinkRecipe WHERE Color_Of_Drink = '{selected_colors[0]}'")
+                df = pd.read_sql_query(clr_qur, connect)
+                st.dataframe(df, hide_index=True)
+            if len(selected_colors) == 2:
+                st.sidebar.write(f"{selected_colors[0]} and {selected_colors[1]} selected")
+
+                clr_qur2 = (f"SELECT * FROM DrinkRecipe WHERE Color_Of_Drink = '{selected_colors[0]}' OR Color_Of_Drink = '{selected_colors[1]}'")
+                df = pd.read_sql_query(clr_qur2, connect)
+                st.dataframe(df, hide_index=True)
+
+
+    if len(selected_liquors or selected_difficulties or selected_glasses or selected_mixers or selected_garnishes or selected_colors) == 0:
+        table_query = "SELECT * FROM DrinkRecipe;"
+        df = pd.read_sql_query(table_query, connect)
+        st.dataframe(df, hide_index=True)
+
 
     connect.close()
 
