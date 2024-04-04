@@ -207,8 +207,8 @@ def all_recipes():
 
         length3 = len(selected_garnishes)
 
-        if selected_garnishes:
-            st.sidebar.write(f"{length3} garnishes selected")
+    if selected_garnishes:
+        st.sidebar.write(f"{length3} garnishes selected")
 
     query4_ar = "SELECT DISTINCT glass_name FROM GlassType;"
     cursor.execute(query4_ar)
@@ -225,8 +225,8 @@ def all_recipes():
 
         length4 = len(selected_glasses)
 
-        if selected_glasses:
-            st.sidebar.write(f"{length4} glasses selected")
+    if selected_glasses:
+        st.sidebar.write(f"{length4} glasses selected")
 
     query5_ar = "SELECT DISTINCT Difficulty FROM DrinkRecipe;"
     cursor.execute(query5_ar)
@@ -241,27 +241,13 @@ def all_recipes():
             if selected_dif:
                 selected_difficulties.append(diff[0])
 
-        if selected_difficulties:
-            if len(selected_difficulties) == 1:
-                st.sidebar.write(f"{selected_difficulties[0]} selected")
-
-                dif_qur = f"SELECT * FROM DrinkRecipe WHERE Difficulty = '{selected_difficulties[0]}';"
-                df = pd.read_sql_query(dif_qur, connect)
-                st.dataframe(df, hide_index=True)
-
-            if len(selected_difficulties) == 2:
-                st.sidebar.write(f"{selected_difficulties[0]} and {selected_difficulties[1]} selected")
-
-                dif_qur2 = (f"SELECT * FROM DrinkRecipe WHERE Difficulty = '{selected_difficulties[0]}' OR "
-                            f"Difficulty = '{selected_difficulties[1]}';")
-                df = pd.read_sql_query(dif_qur2, connect)
-                st.dataframe(df, hide_index=True)
-            if len(selected_difficulties) == 3:
-                st.sidebar.write("All difficulties selected")
-
-                dif_qur3 = (f"SELECT * FROM DrinkRecipe")
-                df = pd.read_sql_query(dif_qur3, connect)
-                st.dataframe(df, hide_index=True)
+    if selected_difficulties:
+        if len(selected_difficulties) == 1:
+            st.sidebar.write(f"{selected_difficulties[0]} selected")
+        if len(selected_difficulties) == 2:
+            st.sidebar.write(f"{selected_difficulties[0]} and {selected_difficulties[1]} selected")
+        if len(selected_difficulties) == 3:
+            st.sidebar.write("All difficulties selected")
 
 
     query6_ar = "SELECT DISTINCT Color_Of_Drink FROM DrinkRecipe;"
@@ -277,27 +263,35 @@ def all_recipes():
             if selected_clr:
                 selected_colors.append(color[0])
 
+    if selected_colors:
+        if len(selected_colors) == 1:
+            st.sidebar.write(f"{selected_colors[0]} selected")
+        if len(selected_colors) == 2:
+            st.sidebar.write(f"{selected_colors[0]} and {selected_colors[1]} selected")
 
-        if selected_colors:
-            if len(selected_colors) == 1:
-                st.sidebar.write(f"{selected_colors[0]} selected")
+#-------------------------------------------------------#
 
-                clr_qur = (f"SELECT * FROM DrinkRecipe WHERE Color_Of_Drink = '{selected_colors[0]}'")
-                df = pd.read_sql_query(clr_qur, connect)
-                st.dataframe(df, hide_index=True)
-            if len(selected_colors) == 2:
-                st.sidebar.write(f"{selected_colors[0]} and {selected_colors[1]} selected")
+    sql_query = "SELECT * FROM DrinkRecipe"
 
-                clr_qur2 = (f"SELECT * FROM DrinkRecipe WHERE Color_Of_Drink = '{selected_colors[0]}' OR Color_Of_Drink = '{selected_colors[1]}'")
-                df = pd.read_sql_query(clr_qur2, connect)
-                st.dataframe(df, hide_index=True)
+    if selected_difficulties or selected_colors:
+        sql_query += " WHERE "
 
+    if selected_difficulties:
+        sql_query += "(" + " OR ".join([f"Difficulty = '{diff}'" for diff in selected_difficulties]) + ")"
 
-    if len(selected_liquors or selected_difficulties or selected_glasses or selected_mixers or selected_garnishes or selected_colors) == 0:
-        table_query = "SELECT * FROM DrinkRecipe;"
-        df = pd.read_sql_query(table_query, connect)
-        st.dataframe(df, hide_index=True)
+    if selected_difficulties and selected_colors:
+        sql_query += " AND "
 
+    if selected_colors:
+        sql_query += "(" + " OR ".join([f"Color_Of_Drink = '{clr}'" for clr in selected_colors]) + ")"
+
+    # Execute SQL query
+    df = pd.read_sql_query(sql_query, connect)
+
+    # Display DataFrame
+    st.dataframe(df, hide_index=True)
+
+#--------------------------------------------------#
 
     connect.close()
 
