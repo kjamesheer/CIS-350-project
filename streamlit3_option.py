@@ -95,9 +95,14 @@ def home_page():
     # Create a two-column layout
     col1, col2 = st.columns(2)
 
-    # Create the first selectbox for selecting ingredient types(major)
+
     with col1:
         type_selection = st.selectbox("Select Type:", ["Liquor", "Mixer", "Garnish", "Glass"], index=None)
+
+    if not type_selection:
+        with col2:
+            st.selectbox("Please select a type of ingredient:", [], index=None)
+
 
 
 
@@ -124,8 +129,8 @@ def home_page():
                             " Please select another ingredient")
             elif selected_spirit:
                 st.write("Recipes:")
-                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("favorite", default=False)},
-                            disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, width=1500)
+                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
+                            disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, use_container_width=True)
 
 
 
@@ -138,17 +143,20 @@ def home_page():
 
             selected_mixer = st.selectbox("Select Mixer:", [str(mixer[0]) for mixer in mixer_items], index=None)
 
-        query2 = (
-            f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
-            f" mix_name = '{selected_mixer}';")
-        df = pd.read_sql_query(query2, connect)
-        if selected_mixer and df.empty:
-            st.write("No recipe with this ingredient."
-                        " Please select another ingredient")
-        elif selected_mixer:
-            st.write("Recipes:")
-            st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("favorite", default=False)},
-                           disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True)
+        _, exp_col, _ = st.columns([1, 3, 1])
+        with exp_col:
+
+            query2 = (
+                f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
+                f" mix_name = '{selected_mixer}';")
+            df = pd.read_sql_query(query2, connect)
+            if selected_mixer and df.empty:
+                st.write("No recipe with this ingredient."
+                            " Please select another ingredient")
+            elif selected_mixer:
+                st.write("Recipes:")
+                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
+                               disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, use_container_width=True)
 
     elif type_selection == "Garnish":
         with col2:
@@ -159,17 +167,20 @@ def home_page():
 
             selected_garnish = st.selectbox("Select Garnish:", [str(garnish[0]) for garnish in garnish_items], index=None)
 
-        query2 = (
-            f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
-            f" Garnish_name = '{selected_garnish}';")
-        df = pd.read_sql_query(query2, connect)
-        if selected_garnish and df.empty:
-            st.write("No recipe with this ingredient."
-                        " Please select another ingredient")
-        elif selected_garnish:
-            st.write("Recipes:")
-            st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("favorite", default=False)},
-                           disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True)
+        _, exp_col, _ = st.columns([1, 3, 1])
+        with exp_col:
+
+            query2 = (
+                f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
+                f" Garnish_name = '{selected_garnish}';")
+            df = pd.read_sql_query(query2, connect)
+            if selected_garnish and df.empty:
+                st.write("No recipe with this ingredient."
+                            " Please select another ingredient")
+            elif selected_garnish:
+                st.write("Recipes:")
+                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
+                               disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, use_container_width=True)
 
 
     elif type_selection == "Glass":
@@ -181,17 +192,20 @@ def home_page():
 
             selected_glass = st.selectbox("Select Glass:", [str(glass[0]) for glass in glass_items], index=None)
 
-        query2 = (
-            f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
-            f" glass_name = '{selected_glass}';")
-        df = pd.read_sql_query(query2, connect)
-        if selected_glass and df.empty:
-            st.write("No recipe with this ingredient."
-                        " Please select another ingredient")
-        elif selected_glass:
-            st.write("Recipes:")
-            st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("favorite", default=False)},
-                           disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True)
+        _, exp_col, _ = st.columns([1, 3, 1])
+        with exp_col:
+
+            query2 = (
+                f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
+                f" glass_name = '{selected_glass}';")
+            df = pd.read_sql_query(query2, connect)
+            if selected_glass and df.empty:
+                st.write("No recipe with this ingredient."
+                            " Please select another ingredient")
+            elif selected_glass:
+                st.write("Recipes:")
+                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
+                               disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, use_container_width=True)
 
 
     else:
@@ -356,15 +370,36 @@ def all_recipes():
 
     connect.close()
 
+def favorites():
+    connect = sqlite3.connect('Liquor_Database.db')
+    cursor = connect.cursor()
+
+    st.write('<div style="text-align: center; font-size: 24px;">Your favorite recipes:</div>', unsafe_allow_html=True)
+
+    connect.close()
+
 
 #-----------------------------------------------------------------------#
 st.markdown("<h2 style='text-align: center; color:"
             " black;'>Liquor Recipe Ingredient Search System</h2>",
             unsafe_allow_html=True)
-selected_page = st.radio("Pages:", ["Home", "All Recipes"])
 
-if selected_page == "Home":
-    home_page()
+col1, col2, col3 = st.columns([1, 4, 1])
 
-if selected_page == "All Recipes":
-    all_recipes()
+with col3:
+    fav_button = st.button("Show Favorites")
+
+if fav_button:
+    favorites()
+    with col1:
+        back_button = st.button("Go Back")
+
+with col1:
+    if not fav_button:
+        selected_page = st.radio("Pages:", ["Home", "All Recipes"])
+
+if not fav_button:
+    if selected_page == "Home":
+        home_page()
+    elif selected_page == "All Recipes":
+        all_recipes()
