@@ -125,8 +125,7 @@ def home_page():
                 f" sprt_name = '{selected_spirit}';")
             df = pd.read_sql_query(query2, connect)
             if selected_spirit and df.empty:
-                st.write("No recipe with this ingredient."
-                            " Please select another ingredient")
+                st.write("<p style='text-align:center;'>No recipe with this ingredient. Please select another ingredient.</p>", unsafe_allow_html=True)
             elif selected_spirit:
                 st.write("Recipes:")
                 st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
@@ -151,8 +150,7 @@ def home_page():
                 f" mix_name = '{selected_mixer}';")
             df = pd.read_sql_query(query2, connect)
             if selected_mixer and df.empty:
-                st.write("No recipe with this ingredient."
-                            " Please select another ingredient")
+                st.write("<p style='text-align:center;'>No recipe with this ingredient. Please select another ingredient.</p>", unsafe_allow_html=True)
             elif selected_mixer:
                 st.write("Recipes:")
                 st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
@@ -175,8 +173,7 @@ def home_page():
                 f" Garnish_name = '{selected_garnish}';")
             df = pd.read_sql_query(query2, connect)
             if selected_garnish and df.empty:
-                st.write("No recipe with this ingredient."
-                            " Please select another ingredient")
+                st.write("<p style='text-align:center;'>No recipe with this ingredient. Please select another ingredient.</p>", unsafe_allow_html=True)
             elif selected_garnish:
                 st.write("Recipes:")
                 st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
@@ -200,8 +197,7 @@ def home_page():
                 f" glass_name = '{selected_glass}';")
             df = pd.read_sql_query(query2, connect)
             if selected_glass and df.empty:
-                st.write("No recipe with this ingredient."
-                            " Please select another ingredient")
+                st.write("<p style='text-align:center;'>No recipe with this ingredient. Please select another ingredient.</p>", unsafe_allow_html=True)
             elif selected_glass:
                 st.write("Recipes:")
                 st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
