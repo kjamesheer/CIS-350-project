@@ -44,36 +44,19 @@ def home_page():
 
 
         <div class="mySlides fade">
-        <img src="https://unsplash.com/photos/
-        QYWYnzvPTAQ/download?
-        ixid=M3wxMjA3fDB8MXxhbGx8
-        fHx8fHx8fHwxNzEyNzA5OTUwfA&force=true"
-        style="width:100%">
+        <img src="https://unsplash.com/photos/QYWYnzvPTAQ/download?ixid=M3wxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNzEyNzA5OTUwfA&force=true"style="width:100%">
         </div>
 
         <div class="mySlides fade">
-        <img src="https://unsplash.com/photos/
-        7EbGkOm8pWM/download?ixid=
-        M3wxMjA3fDB8MXxzZ
-        WFyY2h8M3x8Y29ja3RhaWxzfGVufDB8fHx
-        8MTcxMjY5NDE4OXww&force=
-        true" style="width:100%">
+        <img src="https://unsplash.com/photos/7EbGkOm8pWM/download?ixid=M3wxMjA3fDB8MXxzZWFyY2h8M3x8Y29ja3RhaWxzfGVufDB8fHx8MTcxMjY5NDE4OXww&force=true" style="width:100%">
         </div>
 
         <div class="mySlides fade">
-        <img src="https://images.unsplash.com/
-        photo-1551024709-
-        8f23befc6f87?q=80&w=3057&auto=
-        format&fit=crop&ixlib=rb-4.0.
-        3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx
-        8fGVufDB8fHx8fA%3D%3Dforce=
-        true" style="width:100%">
+        <img src="https://images.unsplash.com/photo-1551024709-8f23befc6f87?q=80&w=3057&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dforce=true" style="width:100%">
         </div>
 
         <div class="mySlides fade">
-        <img src="https://unsplash.com/photos/
-        6EgxRnKU5BI/download?force=
-        true" style="width:100%">
+        <img src="https://unsplash.com/photos/6EgxRnKU5BI/download?force=true"style="width:100%">
         </div>
 
         </div>
