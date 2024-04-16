@@ -121,15 +121,17 @@ def home_page():
         with exp_col:
 
             query2 = (
-                f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
+                f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description, Button as Button FROM DrinkRecipe WHERE"
                 f" sprt_name = '{selected_spirit}';")
             df = pd.read_sql_query(query2, connect)
             if selected_spirit and df.empty:
                 st.write("<p style='text-align:center;'>No recipe with this ingredient. Please select another ingredient.</p>", unsafe_allow_html=True)
             elif selected_spirit:
                 st.write("Recipes:")
-                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
-                            disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, use_container_width=True)
+                column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False),
+                               "sales": st.column_config.ListColumn("Sales (last 6 months)",help="The sales volume in the last 6 months",width="medium")}
+                st.data_editor(df, column_config=column_config,
+                            disabled=["Drinks", "Alcohol Content", "Description", "Button"], hide_index=True, use_container_width=True)
 
 
 
@@ -189,8 +191,8 @@ def home_page():
 
             selected_glass = st.selectbox("Select Glass:", [str(glass[0]) for glass in glass_items], index=None)
 
-        _, exp_col, _ = st.columns([1, 3, 1])
-        with exp_col:
+        col_1, col_2, col_3 = st.columns([1, 3, 1])
+        with col_2:
 
             query2 = (
                 f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
@@ -200,12 +202,28 @@ def home_page():
                 st.write("<p style='text-align:center;'>No recipe with this ingredient. Please select another ingredient.</p>", unsafe_allow_html=True)
             elif selected_glass:
                 st.write("Recipes:")
-                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
+                candy = st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
                                disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, use_container_width=True)
+                with col_3:
+                    st.write("")
+                    st.write("")
+                    st.write("")
+                    if st.button("Update Favorites"):
+                        # Get the updated data
+                        updated_data = st.session_state
 
+                        for index, row in candy.iterrows():
+                            favorite_value = 1 if row["Favorite"] else 0
+                            update_query = f"update DrinkRecipe SET Favorite = {favorite_value} WHERE drnk_name = '{row['Drinks']}'"
+                            cursor.execute(update_query)
+
+                            # Commit the changes to the database
+                            connect.commit()
+                        st.success("Favorites updated successfully!")
 
     else:
         pass
+
 
     connect.close()
 
@@ -269,6 +287,10 @@ def all_recipes():
 
     if selected_garnishes:
         st.sidebar.write(f"{length3} garnishes selected")
+
+        qu2 = "UPDATE DrinkRecipe SET picture = 'hello' WHERE drnk_id = 'D004';"
+        cursor.execute(qu2)
+        connect.commit()
 
     query4_ar = "SELECT DISTINCT glass_name FROM GlassType;"
     cursor.execute(query4_ar)
@@ -371,6 +393,11 @@ def favorites():
     cursor = connect.cursor()
 
     st.write('<div style="text-align: center; font-size: 24px;">Your favorite recipes:</div>', unsafe_allow_html=True)
+
+    fv_qu = "SELECT * FROM DrinkRecipe WHERE favorite = True"
+    df = pd.read_sql_query(fv_qu, connect)
+    st.dataframe(df, hide_index=True)
+
 
     connect.close()
 
