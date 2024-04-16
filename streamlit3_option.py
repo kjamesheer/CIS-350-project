@@ -117,8 +117,8 @@ def home_page():
 
             selected_spirit = st.selectbox("Select Liquor:", [str(liquor[0]) for liquor in liquor_items], index=None)
 
-        _, exp_col, _ = st.columns([1, 3, 1])
-        with exp_col:
+        col_1, col_2, col_3 = st.columns([1, 3, 1])
+        with col_2:
 
             query2 = (
                 f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description, Button as Button FROM DrinkRecipe WHERE"
@@ -130,8 +130,24 @@ def home_page():
                 st.write("Recipes:")
                 column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False),
                                "sales": st.column_config.ListColumn("Sales (last 6 months)",help="The sales volume in the last 6 months",width="medium")}
-                st.data_editor(df, column_config=column_config,
+                poptarts = st.data_editor(df, column_config=column_config,
                             disabled=["Drinks", "Alcohol Content", "Description", "Button"], hide_index=True, use_container_width=True)
+                with col_3:
+                    st.write("")
+                    st.write("")
+                    st.write("")
+                    if st.button("Update Favorites"):
+                        # Get the updated data
+                        updated_data = st.session_state
+
+                        for index, row in poptarts.iterrows():
+                            favorite_value = 1 if row["Favorite"] else 0
+                            update_query = f"update DrinkRecipe SET Favorite = {favorite_value} WHERE drnk_name = '{row['Drinks']}'"
+                            cursor.execute(update_query)
+
+                            # Commit the changes to the database
+                            connect.commit()
+                        st.success("Favorites updated successfully!")
 
 
 
@@ -144,8 +160,8 @@ def home_page():
 
             selected_mixer = st.selectbox("Select Mixer:", [str(mixer[0]) for mixer in mixer_items], index=None)
 
-        _, exp_col, _ = st.columns([1, 3, 1])
-        with exp_col:
+        col_1, col_2, col_3 = st.columns([1, 3, 1])
+        with col_2:
 
             query2 = (
                 f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
@@ -155,8 +171,24 @@ def home_page():
                 st.write("<p style='text-align:center;'>No recipe with this ingredient. Please select another ingredient.</p>", unsafe_allow_html=True)
             elif selected_mixer:
                 st.write("Recipes:")
-                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
+                skittles = st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
                                disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, use_container_width=True)
+                with col_3:
+                    st.write("")
+                    st.write("")
+                    st.write("")
+                    if st.button("Update Favorites"):
+                        # Get the updated data
+                        updated_data = st.session_state
+
+                        for index, row in skittles.iterrows():
+                            favorite_value = 1 if row["Favorite"] else 0
+                            update_query = f"update DrinkRecipe SET Favorite = {favorite_value} WHERE drnk_name = '{row['Drinks']}'"
+                            cursor.execute(update_query)
+
+                            # Commit the changes to the database
+                            connect.commit()
+                        st.success("Favorites updated successfully!")
 
     elif type_selection == "Garnish":
         with col2:
@@ -167,8 +199,8 @@ def home_page():
 
             selected_garnish = st.selectbox("Select Garnish:", [str(garnish[0]) for garnish in garnish_items], index=None)
 
-        _, exp_col, _ = st.columns([1, 3, 1])
-        with exp_col:
+        col_1, col_2, col_3 = st.columns([1, 3, 1])
+        with col_2:
 
             query2 = (
                 f"SELECT Favorite, drnk_name as Drinks, AlcContent as [Alcohol Content], description as Description FROM DrinkRecipe WHERE"
@@ -178,8 +210,24 @@ def home_page():
                 st.write("<p style='text-align:center;'>No recipe with this ingredient. Please select another ingredient.</p>", unsafe_allow_html=True)
             elif selected_garnish:
                 st.write("Recipes:")
-                st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
+                chocolate = st.data_editor(df, column_config={"Favorite": st.column_config.CheckboxColumn("Favorite", default=False)},
                                disabled=["Drinks", "Alcohol Content", "Description"], hide_index=True, use_container_width=True)
+                with col_3:
+                    st.write("")
+                    st.write("")
+                    st.write("")
+                    if st.button("Update Favorites"):
+                        # Get the updated data
+                        updated_data = st.session_state
+
+                        for index, row in chocolate.iterrows():
+                            favorite_value = 1 if row["Favorite"] else 0
+                            update_query = f"update DrinkRecipe SET Favorite = {favorite_value} WHERE drnk_name = '{row['Drinks']}'"
+                            cursor.execute(update_query)
+
+                            # Commit the changes to the database
+                            connect.commit()
+                        st.success("Favorites updated successfully!")
 
 
     elif type_selection == "Glass":
@@ -402,12 +450,23 @@ def favorites():
     connect.close()
 
 
+
 #-----------------------------------------------------------------------#
+connect = sqlite3.connect('Liquor_Database.db')
+cursor = connect.cursor()
+
 st.markdown("<h2 style='text-align: center; color:"
             " black;'>Liquor Recipe Ingredient Search System</h2>",
             unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1, 4, 1])
+col1, col2, col3 = st.columns([4, 1, 1])
+
+with col2:
+    reset_button = st.button("Reset Favorites")
+if reset_button:
+    reset_qur = "UPDATE DrinkRecipe SET favorite = False"
+    cursor.execute(reset_qur)
+    connect.commit()
 
 with col3:
     fav_button = st.button("Show Favorites")
@@ -426,3 +485,5 @@ if not fav_button:
         home_page()
     elif selected_page == "All Recipes":
         all_recipes()
+
+connect.close()
