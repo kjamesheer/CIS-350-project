@@ -7,6 +7,14 @@ st.set_page_config(layout="wide")
 
 
 def home_page():
+    """
+    Holds all the information for the home page.
+    This information includes the slide show pictures,
+    type select, liquor select, and the graphical design
+    such as buttons, dropdowns, and tables(Data_editor).
+
+    Returns: None
+    """
     connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
@@ -357,6 +365,15 @@ def home_page():
 
 
 def all_recipes():
+    """
+    This function stores all the code/data for the all recipes tab
+    in the streamlit application. Essentially the same functionality as
+    the Home page, but has a more in depth filtering system that has been
+    implemented. There is also no drop down menu that is used in this
+    function.
+
+    Returns: None
+    """
     connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
@@ -558,6 +575,13 @@ def all_recipes():
 
 
 def favorites():
+    """
+    This function appends favorite values to a new table 
+    that will be displayed if a button has been clicked 
+    on from the user.
+    
+    Returns: None 
+    """
     connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
