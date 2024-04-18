@@ -5,6 +5,15 @@ import streamlit.components.v1 as components
 
 st.set_page_config(layout="wide")
 
+_connect = """
+connects to Liquor_database.db
+"""
+
+_cursor = """
+executes certain query and related requests such
+as cursor.execute() and cursor.fetchall()
+"""
+
 
 def home_page():
     """
@@ -575,11 +584,11 @@ def all_recipes():
 
 def favorites():
     """
-    This function appends favorite values to a new table 
-    that will be displayed if a button has been clicked 
+    This function appends favorite values to a new table
+    that will be displayed if a button has been clicked
     on from the user.
-    
-    Returns: None 
+
+    Returns: None
     """
     connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
