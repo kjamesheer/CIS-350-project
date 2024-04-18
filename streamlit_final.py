@@ -574,6 +574,13 @@ def all_recipes():
 
 
 def favorites():
+    """
+    This function appends favorite values to a new table 
+    that will be displayed if a button has been clicked 
+    on from the user.
+    
+    Returns: None 
+    """
     connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
