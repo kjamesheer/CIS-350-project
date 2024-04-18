@@ -191,11 +191,10 @@ def home_page():
 
             query2 = (
                 f"SELECT Favorite, drnk_name as Drinks, "
-                f"AlcContent as [Alcohol Content], sprt_name || ', ' "
-                f"|| Garnish_name || ', ' || mix_name || ', ' "
-                f" glass_name as [Ingredients], "
-                f"description as Description "
-                f"FROM DrinkRecipe WHERE"
+                f"AlcContent as [Alcohol Content], "
+                f"sprt_name || ', ' || Garnish_name || ', ' "
+                f"|| mix_name || ', ' || glass_name as [Ingredients], "
+                f"description as Description FROM DrinkRecipe WHERE"
                 f" mix_name = '{selected_mixer}';")
             df = pd.read_sql_query(query2, connect)
             if selected_mixer and df.empty:
