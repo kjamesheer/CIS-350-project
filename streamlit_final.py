@@ -7,6 +7,14 @@ st.set_page_config(layout="wide")
 
 
 def home_page():
+    """
+    Holds all the information for the home page.
+    This information includes the slide show pictures,
+    type select, liquor select, and the graphical design
+    such as buttons, dropdowns, and tables(Data_editor).
+
+    Returns: None
+    """
     connect = sqlite3.connect('Liquor_Database.db')
     cursor = connect.cursor()
 
