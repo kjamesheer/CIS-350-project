@@ -24,8 +24,8 @@ def home_page():
 
     Returns: None
     """
-    connect = sqlite3.connect('Liquor_Database.db')
-    cursor = connect.cursor()
+    _connect = sqlite3.connect('Liquor_Database.db')
+    _cursor = _connect.cursor()
 
     _, exp_col, _ = st.columns([1, 3, 1])
     with exp_col:
@@ -137,8 +137,8 @@ def home_page():
         with col2:
 
             query1 = "SELECT DISTINCT sprt_name FROM Spirit;"
-            cursor.execute(query1)
-            liquor_items = cursor.fetchall()
+            _cursor.execute(query1)
+            liquor_items = _cursor.fetchall()
 
             selected_spirit = st.selectbox("Select Liquor:",
                                            [str(liquor[0]) for liquor
@@ -155,7 +155,7 @@ def home_page():
                 f"|| mix_name || ', ' || glass_name as [Ingredients], "
                 f"description as Description FROM DrinkRecipe WHERE"
                 f" sprt_name = '{selected_spirit}';")
-            df = pd.read_sql_query(query2, connect)
+            df = pd.read_sql_query(query2, _connect)
             if selected_spirit and df.empty:
                 st.write(
                     "<p style='text-align:center;'>"
@@ -186,17 +186,17 @@ def home_page():
                                             f"Favorite = {favorite_value} "
                                             f"WHERE drnk_name "
                                             f"= '{row['Drinks']}'")
-                            cursor.execute(update_query)
+                            _cursor.execute(update_query)
 
-                            connect.commit()
+                            _connect.commit()
                         st.success("Favorites updated successfully!")
 
     elif type_selection == "Mixer":
         with col2:
 
             query1 = "SELECT DISTINCT mix_name FROM Mixer;"
-            cursor.execute(query1)
-            mixer_items = cursor.fetchall()
+            _cursor.execute(query1)
+            mixer_items = _cursor.fetchall()
 
             selected_mixer = st.selectbox("Select Mixer:",
                                           [str(mixer[0])
@@ -213,7 +213,7 @@ def home_page():
                 f"|| mix_name || ', ' || glass_name as [Ingredients], "
                 f"description as Description FROM DrinkRecipe WHERE"
                 f" mix_name = '{selected_mixer}';")
-            df = pd.read_sql_query(query2, connect)
+            df = pd.read_sql_query(query2, _connect)
             if selected_mixer and df.empty:
                 st.write(
                     "<p style='text-align:center;'>"
@@ -243,17 +243,17 @@ def home_page():
                                             f"= {favorite_value} "
                                             f"WHERE drnk_name "
                                             f"= '{row['Drinks']}'")
-                            cursor.execute(update_query)
+                            _cursor.execute(update_query)
 
-                            connect.commit()
+                            _connect.commit()
                         st.success("Favorites updated successfully!")
 
     elif type_selection == "Garnish":
         with col2:
 
             query1 = "SELECT DISTINCT Garnish_name FROM Garnish;"
-            cursor.execute(query1)
-            garnish_items = cursor.fetchall()
+            _cursor.execute(query1)
+            garnish_items = _cursor.fetchall()
 
             selected_garnish = st.selectbox("Select Garnish:",
                                             [str(garnish[0])
@@ -271,7 +271,7 @@ def home_page():
                 f"description as Description"
                 f" FROM DrinkRecipe WHERE"
                 f" Garnish_name = '{selected_garnish}';")
-            df = pd.read_sql_query(query2, connect)
+            df = pd.read_sql_query(query2, _connect)
             if selected_garnish and df.empty:
                 st.write(
                     "<p style='text-align:center;'>"
@@ -301,17 +301,17 @@ def home_page():
                                             f"Favorite = {favorite_value} "
                                             f"WHERE drnk_name = "
                                             f"'{row['Drinks']}'")
-                            cursor.execute(update_query)
+                            _cursor.execute(update_query)
 
-                            connect.commit()
+                            _connect.commit()
                         st.success("Favorites updated successfully!")
 
     elif type_selection == "Glass":
         with col2:
 
             query1 = "SELECT DISTINCT glass_name FROM GlassType;"
-            cursor.execute(query1)
-            glass_items = cursor.fetchall()
+            _cursor.execute(query1)
+            glass_items = _cursor.fetchall()
 
             selected_glass = st.selectbox("Select Glass:",
                                           [str(glass[0])
@@ -331,7 +331,7 @@ def home_page():
                 f"description as Description "
                 f"FROM DrinkRecipe WHERE"
                 f" glass_name = '{selected_glass}';")
-            df = pd.read_sql_query(query2, connect)
+            df = pd.read_sql_query(query2, _connect)
             if selected_glass and df.empty:
                 st.write(
                     "<p style='text-align:center;'>"
@@ -361,15 +361,15 @@ def home_page():
                                             f"SET Favorite = {favorite_value} "
                                             f"WHERE drnk_name = "
                                             f"'{row['Drinks']}'")
-                            cursor.execute(update_query)
+                            _cursor.execute(update_query)
 
-                            connect.commit()
+                            _connect.commit()
                         st.success("Favorites updated successfully!")
 
     else:
         pass
 
-    connect.close()
+    _connect.close()
 
 
 def all_recipes():
@@ -382,14 +382,14 @@ def all_recipes():
 
     Returns: None
     """
-    connect = sqlite3.connect('Liquor_Database.db')
-    cursor = connect.cursor()
+    _connect = sqlite3.connect('Liquor_Database.db')
+    _cursor = _connect.cursor()
 
     st.sidebar.title("Filter:")
 
     query1_ar = "SELECT DISTINCT sprt_name FROM Spirit;"
-    cursor.execute(query1_ar)
-    liquor_items = cursor.fetchall()
+    _cursor.execute(query1_ar)
+    liquor_items = _cursor.fetchall()
 
     selected_liquors = []
 
@@ -406,8 +406,8 @@ def all_recipes():
         st.sidebar.write(f"{length} liquors selected")
 
     query2_ar = "SELECT DISTINCT mix_name FROM Mixer;"
-    cursor.execute(query2_ar)
-    mixer_items = cursor.fetchall()
+    _cursor.execute(query2_ar)
+    mixer_items = _cursor.fetchall()
 
     selected_mixers = []
 
@@ -424,8 +424,8 @@ def all_recipes():
         st.sidebar.write(f"{length2} mixers selected")
 
     query3_ar = "SELECT DISTINCT Garnish_name FROM Garnish;"
-    cursor.execute(query3_ar)
-    garnish_items = cursor.fetchall()
+    _cursor.execute(query3_ar)
+    garnish_items = _cursor.fetchall()
 
     selected_garnishes = []
 
@@ -442,8 +442,8 @@ def all_recipes():
         st.sidebar.write(f"{length3} garnishes selected")
 
     query4_ar = "SELECT DISTINCT glass_name FROM GlassType;"
-    cursor.execute(query4_ar)
-    glass_items = cursor.fetchall()
+    _cursor.execute(query4_ar)
+    glass_items = _cursor.fetchall()
 
     selected_glasses = []
 
@@ -460,8 +460,8 @@ def all_recipes():
         st.sidebar.write(f"{length4} glasses selected")
 
     query5_ar = "SELECT DISTINCT Difficulty FROM DrinkRecipe;"
-    cursor.execute(query5_ar)
-    diff_items = cursor.fetchall()
+    _cursor.execute(query5_ar)
+    diff_items = _cursor.fetchall()
 
     selected_difficulties = []
 
@@ -483,8 +483,8 @@ def all_recipes():
             st.sidebar.write("All difficulties selected")
 
     query6_ar = "SELECT DISTINCT Color_Of_Drink FROM DrinkRecipe;"
-    cursor.execute(query6_ar)
-    color_items = cursor.fetchall()
+    _cursor.execute(query6_ar)
+    color_items = _cursor.fetchall()
 
     selected_colors = []
 
@@ -548,7 +548,7 @@ def all_recipes():
         sql_query += " WHERE " + " AND ".join(selected_filters)
 
     # Execute SQL query
-    df = pd.read_sql_query(sql_query, connect)
+    df = pd.read_sql_query(sql_query, _connect)
 
     # ---------------------------------------------------------------------------------------#
 
@@ -573,13 +573,13 @@ def all_recipes():
                                 f" {favorite_value} "
                                 f"WHERE drnk_name = "
                                 f"'{row['Drinks']}'")
-                cursor.execute(update_query)
+                _cursor.execute(update_query)
 
-                connect.commit()
+                _connect.commit()
             with ar_col2:
                 st.success("Favorites updated successfully!")
 
-    connect.close()
+    _connect.close()
 
 
 def favorites():
@@ -590,8 +590,8 @@ def favorites():
 
     Returns: None
     """
-    connect = sqlite3.connect('Liquor_Database.db')
-    cursor = connect.cursor()
+    _connect = sqlite3.connect('Liquor_Database.db')
+    _cursor = _connect.cursor()
 
     st.write('<div style="text-align: center; '
              'font-size: 24px;">'
@@ -604,11 +604,11 @@ def favorites():
              " mix_name || ', ' || glass_name as [Ingredients], "
              "description as Description FROM"
              " DrinkRecipe WHERE favorite = True")
-    cursor.execute(fv_qu)
-    favs = cursor.fetchall()
+    _cursor.execute(fv_qu)
+    favs = _cursor.fetchall()
 
     if favs:
-        df = pd.read_sql_query(fv_qu, connect)
+        df = pd.read_sql_query(fv_qu, _connect)
         st.data_editor(df, column_config={
             "Favorite": st.column_config.
                        CheckboxColumn("Favorite",
@@ -625,13 +625,13 @@ def favorites():
                      "'>No favorite recipes found!</p>",
                      unsafe_allow_html=True)
 
-    connect.close()
+    _connect.close()
 
 
 # -----------------------------------------------------------------------#
 
-connect = sqlite3.connect('Liquor_Database.db')
-cursor = connect.cursor()
+_connect = sqlite3.connect('Liquor_Database.db')
+_cursor = _connect.cursor()
 
 st.markdown("<h2 style='text-align: center; color:"
             " black;'>Liquor Recipe Ingredient Search System</h2>",
@@ -643,8 +643,8 @@ with col2:
     reset_button = st.button("Reset Favorites")
 if reset_button:
     reset_qur = "UPDATE DrinkRecipe SET favorite = False"
-    cursor.execute(reset_qur)
-    connect.commit()
+    _cursor.execute(reset_qur)
+    _connect.commit()
 
 with col3:
     fav_button = st.button("Show Favorites")
@@ -664,4 +664,4 @@ if not fav_button:
     elif selected_page == "All Recipes":
         all_recipes()
 
-connect.close()
+_connect.close()
